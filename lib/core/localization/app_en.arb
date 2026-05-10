@@ -1,0 +1,13 @@
+{
+  "signin": "Ulgama girmek",
+  "signup": "Ulgama agza bolmak",
+  "signout": "Ulgamdan çykmak",
+  "singtap": "Giriş",
+  "welcomeText": "Siziň bilen hyzmatdaşlyk etmek bize şatlyk berýär. Geliň, söwdaňyzy aňsat we ýakymly edeliň!",
+  "phoneNumber": "Telefon belgi",
+  "password": "Açar sözi",
+  "forgotPassword": "Açar sözüni unutdyňyzmy?",
+  "dontHaveAccount": "Siziň sahypaňyz ýokmy? ",
+  "haveAccount": "Siziň sahypaňyz barmy? ",
+  "time": "Wagt"
+}
