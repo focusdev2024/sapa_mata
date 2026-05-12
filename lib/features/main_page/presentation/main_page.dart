@@ -9,20 +9,19 @@ class MainPage extends StatelessWidget {
     final bool isTablet = MediaQuery.of(context).size.width > 600;
 
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            // 1. Header: Welcome Text & Search
+            // AppBar
             SliverToBoxAdapter(child: _buildHeader(context)),
 
-            // 2. Promo Banner (Horizontal PageView or ListView)
+            // Promo Banner
             SliverToBoxAdapter(child: _buildBannerSection(isTablet)),
 
-            // 3. Categories (Filter Chips)
+            // Categories
             SliverToBoxAdapter(child: _CategoryCard(index: 1)),
 
-            // 4. Grid Title
+            // Grid Title
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               sliver: SliverToBoxAdapter(
@@ -44,7 +43,7 @@ class MainPage extends StatelessWidget {
               ),
             ),
 
-            // 5. Product Grid
+            // Product Grid
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               sliver: SliverGrid(
