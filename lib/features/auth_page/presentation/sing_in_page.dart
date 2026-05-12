@@ -3,6 +3,7 @@ import 'package:sapa_mata/core/constants/color_constants.dart';
 import 'package:sapa_mata/core/utils/context_ext.dart';
 import 'package:sapa_mata/core/utils/context_extensions.dart';
 import 'package:sapa_mata/features/auth_page/presentation/sign_up_page.dart';
+import 'package:sapa_mata/features/auth_page/presentation/widgets/auth_text_fields.dart';
 
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
