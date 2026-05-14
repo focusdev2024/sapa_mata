@@ -9,5 +9,6 @@
   "forgotPassword": "Забыли пароль?",
   "dontHaveAccount": "У вас нет аккаунта? ",
   "haveAccount": "У вас есть аккаунт? ",
-  "time": "Время"
+  "time": "Время",
+  "welcome": "Добро пожаловать"
 }

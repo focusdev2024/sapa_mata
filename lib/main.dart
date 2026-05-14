@@ -48,7 +48,7 @@ class _MyAppState extends State<MyApp> {
       darkTheme: AppTheme.dark(context),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const MainPage(),
+      home: const HomePage(),
     );
   }
 }

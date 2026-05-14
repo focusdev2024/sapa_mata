@@ -10,6 +10,7 @@ class AppTheme {
       scaffoldBackgroundColor: ColorConstants.primaryWhite,
       cardColor: ColorConstants.primaryWhite,
       dividerColor: ColorConstants.primaryGrey,
+      canvasColor: ColorConstants.primaryBlack,
       appBarTheme: AppBarTheme(
         backgroundColor: ColorConstants.primaryWhite,
         foregroundColor: ColorConstants.primaryBlack,
@@ -41,6 +42,7 @@ class AppTheme {
       scaffoldBackgroundColor: ColorConstants.primaryBlack,
       cardColor: ColorConstants.primaryBlack,
       dividerColor: ColorConstants.primaryGrey,
+      canvasColor: ColorConstants.primaryWhite,
       textTheme: TextTheme(
         headlineLarge: AppTypography.headlineLarge(context),
         titleLarge: AppTypography.titleLarge(context),

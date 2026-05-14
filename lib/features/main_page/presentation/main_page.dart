@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sapa_mata/core/utils/context_ext.dart';
 import 'package:sapa_mata/core/utils/context_extensions.dart';
+import 'package:sapa_mata/core/utils/responsive_layout.dart';
+import 'package:sapa_mata/core/constants/image_constants.dart';
 
-class MainPage extends StatelessWidget {
-  const MainPage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  String? apiName = "";
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +78,10 @@ class MainPage extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final String displayName = (apiName?.isNotEmpty ?? false)
+        ? apiName!
+        : "Müşderi";
+    final bool isTablet = Responsive.isTablet(context);
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Row(
@@ -75,19 +90,31 @@ class MainPage extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Welcome back,",
-                style: context.bodyMedium.copyWith(color: Colors.grey),
-              ),
-              Text(
-                "Olivia",
-                style: context.headline.copyWith(fontWeight: FontWeight.bold),
-              ),
+              Text(context.languageLoc.welcome, style: context.bodyMedium),
+              Text(displayName, style: context.headline),
             ],
           ),
-          CircleAvatar(
-            backgroundColor: Colors.grey[100],
-            child: const Icon(Icons.search, color: Colors.black),
+          Material(
+            shape: const CircleBorder(),
+            child: Container(
+              height: isTablet ? 50 : 40,
+              width: isTablet ? 50 : 40,
+              decoration: BoxDecoration(
+                color: Theme.of(context).dividerColor,
+                shape: BoxShape.circle,
+              ),
+              padding: const EdgeInsets.all(10),
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: SvgPicture.asset(
+                  IconsConstants.search,
+                  colorFilter: ColorFilter.mode(
+                    Theme.of(context).canvasColor,
+                    BlendMode.srcIn,
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),

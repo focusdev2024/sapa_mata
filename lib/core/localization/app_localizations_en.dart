@@ -41,4 +41,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get time => 'Wagt';
+
+  @override
+  String get welcome => 'Hoş geldiňiz!';
 }

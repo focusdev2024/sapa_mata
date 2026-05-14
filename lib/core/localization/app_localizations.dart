@@ -163,6 +163,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Wagt'**
   String get time;
+
+  /// No description provided for @welcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Hoş geldiňiz!'**
+  String get welcome;
 }
 
 class _AppLocalizationsDelegate
