@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sapa_mata/core/constants/color_constants.dart';
 import 'package:sapa_mata/core/utils/context_ext.dart';
 import 'package:sapa_mata/core/utils/context_extensions.dart';
 import 'package:sapa_mata/core/utils/responsive_layout.dart';
@@ -17,17 +18,17 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isTablet = MediaQuery.of(context).size.width > 600;
+    final bool isTablet = Responsive.isTablet(context);
 
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
             // AppBar
-            SliverToBoxAdapter(child: _buildHeader(context)),
+            SliverToBoxAdapter(child: _buildHeader(context, isTablet)),
 
             // Promo Banner
-            SliverToBoxAdapter(child: _buildBannerSection(isTablet)),
+            SliverToBoxAdapter(child: _buildBannerSection(context, isTablet)),
 
             // Categories
             SliverToBoxAdapter(child: _CategoryCard(index: 1)),
@@ -77,11 +78,10 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, bool isTablet) {
     final String displayName = (apiName?.isNotEmpty ?? false)
         ? apiName!
         : "Müşderi";
-    final bool isTablet = Responsive.isTablet(context);
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Row(
@@ -97,8 +97,8 @@ class _HomePageState extends State<HomePage> {
           Material(
             shape: const CircleBorder(),
             child: Container(
-              height: isTablet ? 50 : 40,
-              width: isTablet ? 50 : 40,
+              height: isTablet ? 55 : 45,
+              width: isTablet ? 55 : 45,
               decoration: BoxDecoration(
                 color: Theme.of(context).dividerColor,
                 shape: BoxShape.circle,
@@ -122,9 +122,11 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget _buildBannerSection(bool isTablet) {
+Widget _buildBannerSection(BuildContext context, bool isTablet) {
+  final Color gradientStart = Color.fromRGBO(255, 255, 255, 0.623);
+  final Color gradientEnd = Color.fromRGBO(0, 0, 0, 0.418);
   return SizedBox(
-    height: 200,
+    height: isTablet ? 350 : 250,
     child: ListView.builder(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -134,14 +136,72 @@ Widget _buildBannerSection(bool isTablet) {
           width: isTablet ? 500 : MediaQuery.of(context).size.width * 0.85,
           margin: const EdgeInsets.only(right: 15),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF76E05F), Color(0xFF4CAF50)],
-            ),
             borderRadius: BorderRadius.circular(25),
+            image: const DecorationImage(
+              image: NetworkImage(
+                "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c2tpbiUyMGNlcnVtfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
+              ),
+              fit: BoxFit.cover,
+            ),
           ),
-          child: const Padding(
-            padding: EdgeInsets.all(20),
-            child: Text("Promo Content Here"), // Add your text/images here
+          child: Stack(
+            children: [
+              Container(
+                width: isTablet
+                    ? 500
+                    : MediaQuery.of(context).size.width * 0.85,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [gradientStart, gradientEnd],
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Spacer(),
+                    Text(
+                      "Skincare essentials",
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.headline,
+                    ),
+                    SizedBox(
+                      width: isTablet ? 240 : 180,
+                      child: Text(
+                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.bodyMedium.copyWith(
+                          color: ColorConstants.primaryWhite,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(123, 113, 220, 55),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        "20% Arzanlaşyk",
+                        style: context.bodyMedium.copyWith(
+                          color: ColorConstants.primaryWhite,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         );
       },
