@@ -44,4 +44,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get welcome => 'Hoş geldiňiz!';
+
+  @override
+  String get discount => 'Arzanlaşyk';
 }

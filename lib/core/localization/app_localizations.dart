@@ -169,6 +169,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hoş geldiňiz!'**
   String get welcome;
+
+  /// No description provided for @discount.
+  ///
+  /// In en, this message translates to:
+  /// **'Arzanlaşyk'**
+  String get discount;
 }
 
 class _AppLocalizationsDelegate
