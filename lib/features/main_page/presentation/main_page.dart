@@ -189,9 +189,7 @@ Widget _buildBannerSection(BuildContext context, bool isTablet) {
                         bannerTitle,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: context.headline.copyWith(
-                          color: ColorConstants.primaryWhite,
-                        ),
+                        style: context.headline,
                       ),
                       const SizedBox(height: 4),
                       SizedBox(
