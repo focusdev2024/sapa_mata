@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
             SliverToBoxAdapter(child: _buildBannerSection(context, isTablet)),
 
             // Categories
-            SliverToBoxAdapter(child: _CategoryCard(index: 1)),
+            SliverToBoxAdapter(child: _CategoryCard(index: 3)),
 
             // Grid Title
             SliverPadding(
@@ -344,18 +344,26 @@ class _CategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 80, // Fixed width for horizontal scroll
+      width: 80, //width for horizontal scroll
       margin: const EdgeInsets.only(right: 12),
       child: Column(
         children: [
-          CircleAvatar(
-            radius: 30,
-            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
-            child: Icon(
-              Icons.category_outlined,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            decoration: BoxDecoration(
               color: Theme.of(context).primaryColor,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Theme.of(context).canvasColor,),
+            ),
+            child: Text(
+            "Fragrance$index",
+            style: context.labelSmall.copyWith(
+              color: Theme.of(context).canvasColor,
+              fontWeight: FontWeight.bold,
             ),
           ),
+          ),
+          
           const SizedBox(height: 8),
           Text(
             "Category $index",
