@@ -6,6 +6,7 @@ import 'package:sapa_mata/core/utils/context_ext.dart';
 import 'package:sapa_mata/core/utils/context_extensions.dart';
 import 'package:sapa_mata/core/utils/responsive_layout.dart';
 import 'package:sapa_mata/core/constants/image_constants.dart';
+import 'package:sapa_mata/features/home_page/presentation/widgets/product_card_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,6 +17,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String? apiName = "";
+
+  List<String> categories = [
+    "Fragrance",
+    "Skincare",
+    "Makeup",
+    "Haircare",
+    "Bath & Body",
+    "Tools & Brushes",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +42,6 @@ class _HomePageState extends State<HomePage> {
             SliverToBoxAdapter(child: _buildBannerSection(context, isTablet)),
 
             // Categories
-            SliverToBoxAdapter(child: _CategoryCard(index: 3)),
-
-            // Grid Title
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               sliver: SliverToBoxAdapter(
@@ -42,7 +49,7 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "New arrivals",
+                      "Kategories",
                       style: context.titleLarge.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -55,23 +62,34 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+            SliverToBoxAdapter(
+              child: _buildCategoryCard(context, isTablet, categories),
+            ),
 
-            // Product Grid
+            // Grid Title
             SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverGrid(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: isTablet ? 4 : 2,
-                  mainAxisSpacing: 15,
-                  crossAxisSpacing: 15,
-                  childAspectRatio: 0.7, // Adjusted for the taller card design
-                ),
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => const ProductCard(),
-                  childCount: 10,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              sliver: SliverToBoxAdapter(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Täze harytlar",
+                      style: context.titleLarge.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "Hemmesi",
+                      style: context.labelSmall.copyWith(color: Colors.grey),
+                    ),
+                  ],
                 ),
               ),
             ),
+
+            // Product Grid
+            SliverToBoxAdapter(child: _buildNewProducts(context, isTablet)),
           ],
         ),
       ),
@@ -133,7 +151,6 @@ Widget _buildBannerSection(BuildContext context, bool isTablet) {
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
   const int discountPercent = 20;
   return AspectRatio(
-    // Handles across mobile & tablet
     aspectRatio: isTablet ? 21 / 8 : 16 / 10,
     child: ListView.builder(
       scrollDirection: Axis.horizontal,
@@ -148,7 +165,6 @@ Widget _buildBannerSection(BuildContext context, bool isTablet) {
             borderRadius: BorderRadius.circular(25),
             child: Stack(
               children: [
-                // LAYER 1: API Image Handler with explicit fail-safes
                 Positioned.fill(
                   child: apiImageUrl.isNotEmpty
                       ? CachedNetworkImage(
@@ -237,143 +253,64 @@ Widget _buildFallbackAsset() {
   return Image.asset('assets/images/mary_mata_market.png', fit: BoxFit.cover);
 }
 
-class ProductCard extends StatelessWidget {
-  const ProductCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.shade100),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Image and Heart
-          Expanded(
-            child: Stack(
-              children: [
-                Center(
-                  child: Icon(
-                    Icons.shopping_bag_outlined,
-                    size: 50,
-                    color: Colors.grey[300],
+Widget _buildCategoryCard(
+  BuildContext context,
+  bool isTablet,
+  List<String> categories,
+) {
+  return AspectRatio(
+    aspectRatio: isTablet ? 25 / 2 : 25 / 4,
+    child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      itemCount: categories.length,
+      physics: const BouncingScrollPhysics(),
+      itemBuilder: (context, index) {
+        return Container(
+          margin: const EdgeInsets.only(right: 12),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Theme.of(context).canvasColor),
+                ),
+                child: Text(
+                  categories[index],
+                  style: context.labelSmall.copyWith(
+                    color: Theme.of(context).canvasColor,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Positioned(
-                  top: 10,
-                  right: 10,
-                  child: Icon(Icons.favorite_border, size: 20),
-                ),
-                Positioned(
-                  top: 10,
-                  left: 10,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Text(
-                      "LIMITED",
-                      style: TextStyle(color: Colors.white, fontSize: 8),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-          // Details
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "The Ordinary",
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
-                ),
-                const Text(
-                  "Glycolic Acid 7%...",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                  maxLines: 1,
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "\$14.50",
-                      style: context.titleLarge.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: Colors.black,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.add,
-                        color: Colors.white,
-                        size: 16,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+        );
+      },
+    ),
+  );
 }
 
-class _CategoryCard extends StatelessWidget {
-  final int index;
-  const _CategoryCard({required this.index});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 80, //width for horizontal scroll
-      margin: const EdgeInsets.only(right: 12),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-            decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Theme.of(context).canvasColor,),
-            ),
-            child: Text(
-            "Fragrance$index",
-            style: context.labelSmall.copyWith(
-              color: Theme.of(context).canvasColor,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          ),
-          
-          const SizedBox(height: 8),
-          Text(
-            "Category $index",
-            style: context.labelSmall, // Using your typography extension
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
-    );
-  }
+Widget _buildNewProducts(BuildContext context, bool isTablet) {
+  return AspectRatio(
+    aspectRatio: isTablet ? 16 / 5 : 16 / 10,
+    child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      itemCount: 5,
+      physics: const BouncingScrollPhysics(),
+      itemBuilder: (context, index) {
+        return Container(
+          width: isTablet ? 210 : 160,
+          margin: const EdgeInsets.only(right: 12),
+          child: ProductCard(),
+        );
+      },
+    ),
+  );
 }

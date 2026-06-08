@@ -6,7 +6,7 @@ import 'package:sapa_mata/core/utils/context_ext.dart';
 import 'package:sapa_mata/core/utils/context_extensions.dart';
 import 'package:sapa_mata/features/auth_page/presentation/sing_in_page.dart';
 import 'package:sapa_mata/features/auth_page/presentation/widgets/auth_text_fields.dart';
-import 'package:sapa_mata/features/main_page/presentation/main_page.dart';
+import 'package:sapa_mata/features/home_page/presentation/home_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
