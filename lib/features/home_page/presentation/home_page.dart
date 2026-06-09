@@ -7,6 +7,7 @@ import 'package:sapa_mata/core/utils/context_extensions.dart';
 import 'package:sapa_mata/core/utils/responsive_layout.dart';
 import 'package:sapa_mata/core/constants/image_constants.dart';
 import 'package:sapa_mata/features/home_page/presentation/widgets/product_card_widget.dart';
+import 'package:sapa_mata/features/home_page/presentation/widgets/sliver_section_header.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -36,109 +37,105 @@ class _HomePageState extends State<HomePage> {
         child: CustomScrollView(
           slivers: [
             // AppBar
-            SliverToBoxAdapter(child: _buildHeader(context, isTablet)),
+            SliverToBoxAdapter(child: _buildHeader(context, isTablet, apiName)),
 
             // Promo Banner
             SliverToBoxAdapter(child: _buildBannerSection(context, isTablet)),
 
             // Categories
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              sliver: SliverToBoxAdapter(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Kategories",
-                      style: context.titleLarge.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      "See all",
-                      style: context.labelSmall.copyWith(color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ),
+            SliverSectionHeader(
+              title: "Kategoriyalar",
+              onActionTap: () {
+                print("Navigate to categories page");
+              },
             ),
             SliverToBoxAdapter(
               child: _buildCategoryCard(context, isTablet, categories),
             ),
 
-            // Grid Title
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              sliver: SliverToBoxAdapter(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Täze harytlar",
-                      style: context.titleLarge.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      "Hemmesi",
-                      style: context.labelSmall.copyWith(color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ),
+            // New Products Title
+            SliverSectionHeader(
+              title: "Täze harytlar",
+              onActionTap: () {
+                print("Navigate to new products page");
+              },
             ),
 
-            // Product Grid
+            // New Products ListView
             SliverToBoxAdapter(child: _buildNewProducts(context, isTablet)),
+
+            // Recommended Products Title
+            SliverSectionHeader(
+              title: "Siz üçin",
+              onActionTap: () {
+                print("Navigate to recommended products page");
+              },
+            ),
+
+            // Recommended Products ListView
+            SliverToBoxAdapter(
+              child: _buildRecommendedProducts(context, isTablet),
+            ),
+
+            // Top Products Title
+            SliverSectionHeader(
+              title: "Top harytlar",
+              onActionTap: () {
+                print("Navigate to top products page");
+              },
+            ),
+
+            SliverToBoxAdapter(
+              child: _buildTopProductSection(context, isTablet),
+            ),
           ],
         ),
       ),
-      //bottomNavigationBar: _buildBottomNav(),
     );
   }
+}
 
-  Widget _buildHeader(BuildContext context, bool isTablet) {
-    final String displayName = (apiName?.isNotEmpty ?? false)
-        ? apiName!
-        : "Müşderi";
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(context.languageLoc.welcome, style: context.bodyMedium),
-              Text(displayName, style: context.headline),
-            ],
-          ),
-          Material(
-            shape: const CircleBorder(),
-            child: Container(
-              height: isTablet ? 55 : 45,
-              width: isTablet ? 55 : 45,
-              decoration: BoxDecoration(
-                color: Theme.of(context).dividerColor,
-                shape: BoxShape.circle,
-              ),
-              padding: const EdgeInsets.all(10),
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: SvgPicture.asset(
-                  IconsConstants.search,
-                  colorFilter: ColorFilter.mode(
-                    Theme.of(context).canvasColor,
-                    BlendMode.srcIn,
-                  ),
+Widget _buildHeader(BuildContext context, bool isTablet, String? apiName) {
+  final String displayName = (apiName?.isNotEmpty ?? false)
+      ? apiName!
+      : "Müşderi";
+  return Padding(
+    padding: const EdgeInsets.all(20),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(context.languageLoc.welcome, style: context.bodyMedium),
+            Text(displayName, style: context.headline),
+          ],
+        ),
+        Material(
+          shape: const CircleBorder(),
+          child: Container(
+            height: isTablet ? 55 : 45,
+            width: isTablet ? 55 : 45,
+            decoration: BoxDecoration(
+              color: Theme.of(context).dividerColor,
+              shape: BoxShape.circle,
+            ),
+            padding: const EdgeInsets.all(10),
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: SvgPicture.asset(
+                IconsConstants.search,
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).canvasColor,
+                  BlendMode.srcIn,
                 ),
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
 }
 
 Widget _buildBannerSection(BuildContext context, bool isTablet) {
@@ -309,6 +306,100 @@ Widget _buildNewProducts(BuildContext context, bool isTablet) {
           width: isTablet ? 210 : 160,
           margin: const EdgeInsets.only(right: 12),
           child: ProductCard(),
+        );
+      },
+    ),
+  );
+}
+
+Widget _buildRecommendedProducts(BuildContext context, bool isTablet) {
+  return AspectRatio(
+    aspectRatio: isTablet ? 16 / 5 : 16 / 10,
+    child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      itemCount: 5,
+      physics: const BouncingScrollPhysics(),
+      itemBuilder: (context, index) {
+        return Container(
+          width: isTablet ? 210 : 160,
+          margin: const EdgeInsets.only(right: 12),
+          child: ProductCard(),
+        );
+      },
+    ),
+  );
+}
+
+Widget _buildTopProductSection(BuildContext context, bool isTablet) {
+  const String apiImageUrl =
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=60";
+  const String trendingTag = "TRENDING";
+  const String bannerDesc =
+      "TikTok says this fragrance causes emotional flashbacks.";
+
+  return SizedBox(
+    // We give the total section enough height to fit both the image and the text below it
+    height: isTablet ? 360 : 290,
+    child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      itemCount: 3,
+      physics: const BouncingScrollPhysics(),
+      itemBuilder: (context, index) {
+        return Container(
+          width: isTablet ? 450 : MediaQuery.of(context).size.width * 0.82,
+          margin: const EdgeInsets.only(right: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 1. THE IMAGE CARD (Rounded corners, no text inside)
+              AspectRatio(
+                // This controls the shape of the image card itself
+                aspectRatio: isTablet ? 16 / 9 : 16 / 10,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(
+                    28,
+                  ), // Matches the smooth, large radius in your image
+                  child: CachedNetworkImage(
+                    imageUrl: apiImageUrl,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      color: Colors.grey[200],
+                      child: const Center(child: CircularProgressIndicator()),
+                    ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.broken_image),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 12), // Space between image card and text
+              // 2. THE TEXT SECTION (Sits purely below the image)
+              Text(
+                trendingTag,
+                style: context.bodyMedium.copyWith(
+                  fontSize: isTablet ? 15 : 13,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.5,
+                ),
+              ),
+
+              const SizedBox(height: 4),
+
+              Text(
+                bannerDesc,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: context.bodyMedium.copyWith(
+                  fontSize: isTablet ? 22 : 18,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -0.4,
+                  height: 1.2,
+                ),
+              ),
+            ],
+          ),
         );
       },
     ),
