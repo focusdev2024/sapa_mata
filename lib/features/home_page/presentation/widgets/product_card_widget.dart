@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:sapa_mata/core/constants/image_constants.dart';
 import 'package:sapa_mata/core/utils/context_extensions.dart';
 
 class ProductCard extends StatelessWidget {
@@ -8,14 +10,13 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).primaryColor,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.shade100),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Image and Heart
           Expanded(
             child: Stack(
               children: [
@@ -26,10 +27,24 @@ class ProductCard extends StatelessWidget {
                     color: Colors.grey[300],
                   ),
                 ),
-                const Positioned(
+                Positioned(
                   top: 10,
                   right: 10,
-                  child: Icon(Icons.favorite_border, size: 20),
+                  child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: SvgPicture.asset(
+                      IconsConstants.favoriteLight,
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context)
+                                .elevatedButtonTheme
+                                .style
+                                ?.backgroundColor
+                                ?.resolve({MaterialState.selected}) ??
+                            Colors.green,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
                 ),
                 Positioned(
                   top: 10,

@@ -17,7 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String? apiName = "";
+  String? userName = "";
 
   List<String> categories = [
     "Fragrance",
@@ -26,6 +26,51 @@ class _HomePageState extends State<HomePage> {
     "Haircare",
     "Bath & Body",
     "Tools & Brushes",
+  ];
+
+  List<Map<String, String>> topProducts = [
+    {
+      "imageUrl":
+          "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=60",
+      "trendingTag": "TRENDING",
+      "description": "TikTok says this fragrance causes emotional flashbacks.",
+    },
+    {
+      "imageUrl":
+          "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=800&q=60",
+      "trendingTag": "POPULAR",
+      "description": "This moisturizer is a cult favorite for dry skin.",
+    },
+    {
+      "imageUrl":
+          "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=800&q=60",
+      "trendingTag": "NEW",
+      "description": "This serum is the latest buzz in skincare circles.",
+    },
+  ];
+
+  List<Map<String, String>>? bannerData = [
+    {
+      "imageUrl":
+          "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=60",
+      "title": "Skincare essentials",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "discountPercent": "20",
+    },
+    {
+      "imageUrl":
+          "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=800&q=60",
+      "title": "Makeup must-haves",
+      "description": "Discover the latest trends in makeup products.",
+      "discountPercent": "15",
+    },
+    {
+      "imageUrl":
+          "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=800&q=60",
+      "title": "Haircare heroes",
+      "description": "Top-rated products for healthy, beautiful hair.",
+      "discountPercent": "25",
+    },
   ];
 
   @override
@@ -37,10 +82,25 @@ class _HomePageState extends State<HomePage> {
         child: CustomScrollView(
           slivers: [
             // AppBar
-            SliverToBoxAdapter(child: _buildHeader(context, isTablet, apiName)),
+            SliverToBoxAdapter(
+              child: _buildHeader(
+                context,
+                isTablet,
+                userName,
+                onSearchTap: () {
+                  print("Navigate to search page");
+                },
+              ),
+            ),
 
             // Promo Banner
-            SliverToBoxAdapter(child: _buildBannerSection(context, isTablet)),
+            SliverToBoxAdapter(
+              child: _buildBannerSection(
+                context,
+                isTablet,
+                bannerData: bannerData,
+              ),
+            ),
 
             // Categories
             SliverSectionHeader(
@@ -86,8 +146,9 @@ class _HomePageState extends State<HomePage> {
             ),
 
             SliverToBoxAdapter(
-              child: _buildTopProductSection(context, isTablet),
+              child: _buildTopProductSection(context, isTablet, topProducts),
             ),
+            SliverToBoxAdapter(child: SizedBox(height: 50)),
           ],
         ),
       ),
@@ -95,9 +156,14 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget _buildHeader(BuildContext context, bool isTablet, String? apiName) {
-  final String displayName = (apiName?.isNotEmpty ?? false)
-      ? apiName!
+Widget _buildHeader(
+  BuildContext context,
+  bool isTablet,
+  String? userName, {
+  VoidCallback? onSearchTap,
+}) {
+  final String displayName = (userName?.isNotEmpty ?? false)
+      ? userName!
       : "Müşderi";
   return Padding(
     padding: const EdgeInsets.all(20),
@@ -113,21 +179,25 @@ Widget _buildHeader(BuildContext context, bool isTablet, String? apiName) {
         ),
         Material(
           shape: const CircleBorder(),
-          child: Container(
-            height: isTablet ? 55 : 45,
-            width: isTablet ? 55 : 45,
-            decoration: BoxDecoration(
-              color: Theme.of(context).dividerColor,
-              shape: BoxShape.circle,
-            ),
-            padding: const EdgeInsets.all(10),
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: SvgPicture.asset(
-                IconsConstants.search,
-                colorFilter: ColorFilter.mode(
-                  Theme.of(context).canvasColor,
-                  BlendMode.srcIn,
+          child: GestureDetector(
+            onTap: onSearchTap ?? () => print("Navigate to search page"),
+            child: Container(
+              height: isTablet ? 55 : 45,
+              width: isTablet ? 55 : 45,
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                shape: BoxShape.circle,
+                border: Border.all(color: Theme.of(context).canvasColor),
+              ),
+              padding: const EdgeInsets.all(10),
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: SvgPicture.asset(
+                  IconsConstants.search,
+                  colorFilter: ColorFilter.mode(
+                    Theme.of(context).canvasColor,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             ),
@@ -138,21 +208,20 @@ Widget _buildHeader(BuildContext context, bool isTablet, String? apiName) {
   );
 }
 
-Widget _buildBannerSection(BuildContext context, bool isTablet) {
-  final Color gradientStart = Color.fromRGBO(255, 255, 255, 0.623);
-  final Color gradientEnd = Color.fromRGBO(0, 0, 0, 0.418);
-  const String apiImageUrl =
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=60";
-  const String bannerTitle = "Skincare essentials";
-  const String bannerDesc =
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
-  const int discountPercent = 20;
-  return AspectRatio(
-    aspectRatio: isTablet ? 21 / 8 : 16 / 10,
+Widget _buildBannerSection(
+  BuildContext context,
+  bool isTablet, {
+  List<Map<String, String>>? bannerData,
+}) {
+  final Color gradientStart = const Color.fromRGBO(255, 255, 255, 0.15);
+  final Color gradientEnd = const Color.fromRGBO(0, 0, 0, 0.65);
+
+  return SizedBox(
+    height: isTablet ? 260 : 230,
     child: ListView.builder(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      itemCount: 3,
+      itemCount: bannerData?.length ?? 3,
       physics: const BouncingScrollPhysics(),
       itemBuilder: (context, index) {
         return Container(
@@ -162,10 +231,11 @@ Widget _buildBannerSection(BuildContext context, bool isTablet) {
             borderRadius: BorderRadius.circular(25),
             child: Stack(
               children: [
+                // Background image
                 Positioned.fill(
-                  child: apiImageUrl.isNotEmpty
+                  child: bannerData?.isNotEmpty ?? false
                       ? CachedNetworkImage(
-                          imageUrl: apiImageUrl,
+                          imageUrl: bannerData![index]['imageUrl']!,
                           fit: BoxFit.cover,
                           placeholder: (context, url) => Container(
                             color: Colors.grey[200],
@@ -174,11 +244,12 @@ Widget _buildBannerSection(BuildContext context, bool isTablet) {
                             ),
                           ),
                           errorWidget: (context, url, error) =>
-                              _buildFallbackAsset(),
+                              const Icon(Icons.broken_image),
                         )
                       : _buildFallbackAsset(),
                 ),
 
+                // Gradient Overlay
                 Positioned.fill(
                   child: Container(
                     decoration: BoxDecoration(
@@ -191,46 +262,58 @@ Widget _buildBannerSection(BuildContext context, bool isTablet) {
                   ),
                 ),
 
-                // Interactive Content Components
-                Padding(
-                  padding: const EdgeInsets.all(20),
+                // FIX 2: Anchor the components safely using Positioned instead of standard blanket Padding
+                Positioned(
+                  left: 16,
+                  right: 16,
+                  bottom: 14, // Pin cleanly relative to bottom boundary
+                  top: 14, // Allow bounds definition to control layout stretch
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment
+                        .end, // Keeps items pushed to bottom safely
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        bannerTitle,
+                        bannerData?[index]['title'] ?? '',
+                        maxLines:
+                            2, // Reduced to 1 line for phones to maximize rendering safety margin
+                        overflow: TextOverflow.ellipsis,
+                        style: context.headline.copyWith(
+                          color: const Color(
+                            0xFF71DC37,
+                          ), // Matches your brand green color from image
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        bannerData?[index]['description'] ?? '',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: context.headline,
-                      ),
-                      const SizedBox(height: 4),
-                      SizedBox(
-                        width: isTablet ? 300 : 220,
-                        child: Text(
-                          bannerDesc,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: context.bodyMedium.copyWith(
-                            color: ColorConstants.primaryWhite,
-                          ),
+                        style: context.bodyMedium.copyWith(
+                          color: ColorConstants.primaryWhite,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
+                      // The Arzanlaşyk Badge
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 8,
+                          horizontal: 12,
+                          vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(160, 113, 220, 55),
+                          color: const Color(
+                            0xFF71DC37,
+                          ), // Solid brand match color hex
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          "$discountPercent% ${context.languageLoc.discount}",
+                          "${bannerData?[index]['discountPercent'] ?? ''}% ${context.languageLoc.discount}",
                           style: context.bodyMedium.copyWith(
                             color: ColorConstants.primaryWhite,
                             fontWeight: FontWeight.bold,
+                            fontSize: isTablet ? 14 : 12,
                           ),
                         ),
                       ),
@@ -277,11 +360,16 @@ Widget _buildCategoryCard(
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: Theme.of(context).canvasColor),
                 ),
-                child: Text(
-                  categories[index],
-                  style: context.labelSmall.copyWith(
-                    color: Theme.of(context).canvasColor,
-                    fontWeight: FontWeight.bold,
+                child: GestureDetector(
+                  onTap: () {
+                    print("Navigate to ${categories[index]} category page");
+                  },
+                  child: Text(
+                    categories[index],
+                    style: context.labelSmall.copyWith(
+                      color: Theme.of(context).canvasColor,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -331,20 +419,17 @@ Widget _buildRecommendedProducts(BuildContext context, bool isTablet) {
   );
 }
 
-Widget _buildTopProductSection(BuildContext context, bool isTablet) {
-  const String apiImageUrl =
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=60";
-  const String trendingTag = "TRENDING";
-  const String bannerDesc =
-      "TikTok says this fragrance causes emotional flashbacks.";
-
+Widget _buildTopProductSection(
+  BuildContext context,
+  bool isTablet,
+  List<Map<String, String>>? topProducts,
+) {
   return SizedBox(
-    // We give the total section enough height to fit both the image and the text below it
     height: isTablet ? 360 : 290,
     child: ListView.builder(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      itemCount: 3,
+      itemCount: topProducts?.length ?? 3,
       physics: const BouncingScrollPhysics(),
       itemBuilder: (context, index) {
         return Container(
@@ -353,16 +438,14 @@ Widget _buildTopProductSection(BuildContext context, bool isTablet) {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 1. THE IMAGE CARD (Rounded corners, no text inside)
               AspectRatio(
-                // This controls the shape of the image card itself
                 aspectRatio: isTablet ? 16 / 9 : 16 / 10,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                    28,
-                  ), // Matches the smooth, large radius in your image
+                  borderRadius: BorderRadius.circular(28),
                   child: CachedNetworkImage(
-                    imageUrl: apiImageUrl,
+                    imageUrl:
+                        topProducts?[index]["imageUrl"] ??
+                        "assets/images/mary_mata_market.png",
                     fit: BoxFit.cover,
                     placeholder: (context, url) => Container(
                       color: Colors.grey[200],
@@ -374,21 +457,23 @@ Widget _buildTopProductSection(BuildContext context, bool isTablet) {
                 ),
               ),
 
-              const SizedBox(height: 12), // Space between image card and text
-              // 2. THE TEXT SECTION (Sits purely below the image)
+              const SizedBox(height: 12),
+
               Text(
-                trendingTag,
+                topProducts?[index]["trendingTag"] ?? "TRENDING",
                 style: context.bodyMedium.copyWith(
                   fontSize: isTablet ? 15 : 13,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.5,
+                  color: Theme.of(context).dividerColor,
                 ),
               ),
 
               const SizedBox(height: 4),
 
               Text(
-                bannerDesc,
+                topProducts?[index]["description"] ??
+                    "Description not available",
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: context.bodyMedium.copyWith(

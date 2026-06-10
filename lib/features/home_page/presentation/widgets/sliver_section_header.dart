@@ -37,9 +37,9 @@ class SliverSectionHeader extends StatelessWidget {
                 ), // Bigger touch target
                 child: Text(
                   actionText,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.labelSmall?.copyWith(color: Colors.grey),
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Theme.of(context).dividerColor,
+                  ),
                 ),
               ),
             ),
