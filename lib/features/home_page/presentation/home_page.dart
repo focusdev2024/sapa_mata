@@ -262,12 +262,11 @@ Widget _buildBannerSection(
                   ),
                 ),
 
-                // FIX 2: Anchor the components safely using Positioned instead of standard blanket Padding
                 Positioned(
                   left: 16,
                   right: 16,
-                  bottom: 14, // Pin cleanly relative to bottom boundary
-                  top: 14, // Allow bounds definition to control layout stretch
+                  bottom: 14,
+                  top: 14,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment
@@ -276,13 +275,11 @@ Widget _buildBannerSection(
                     children: [
                       Text(
                         bannerData?[index]['title'] ?? '',
-                        maxLines:
-                            2, // Reduced to 1 line for phones to maximize rendering safety margin
+                        maxLines: 1,
+                        textScaler: TextScaler.linear(0.9),
                         overflow: TextOverflow.ellipsis,
                         style: context.headline.copyWith(
-                          color: const Color(
-                            0xFF71DC37,
-                          ), // Matches your brand green color from image
+                          color: ColorConstants.primaryGreen,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -290,6 +287,7 @@ Widget _buildBannerSection(
                       Text(
                         bannerData?[index]['description'] ?? '',
                         maxLines: 2,
+
                         overflow: TextOverflow.ellipsis,
                         style: context.bodyMedium.copyWith(
                           color: ColorConstants.primaryWhite,
@@ -382,18 +380,56 @@ Widget _buildCategoryCard(
 }
 
 Widget _buildNewProducts(BuildContext context, bool isTablet) {
+  final List<Map<String, dynamic>> mockProducts = [
+    {
+      "title": "Fragrance Rose",
+      "description": "Essential body mist",
+      "image": "assets/images/product_image.png",
+      "price": 14.50,
+      "favorite": false,
+      "limited": true,
+    },
+    {
+      "title": "Skincare Cream",
+      "description": "Hydrating night face lotion",
+      "image": "assets/images/product_image.png",
+      "price": 22.00,
+      "favorite": true,
+      "limited": false,
+    },
+  ];
+
   return AspectRatio(
     aspectRatio: isTablet ? 16 / 5 : 16 / 10,
     child: ListView.builder(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      itemCount: 5,
+      itemCount: mockProducts.length,
       physics: const BouncingScrollPhysics(),
       itemBuilder: (context, index) {
-        return Container(
-          width: isTablet ? 210 : 160,
-          margin: const EdgeInsets.only(right: 12),
-          child: ProductCard(),
+        final product = mockProducts[index];
+        return GestureDetector(
+          onTap: () {
+            print("Navigate to product details page for ${product['title']}");
+          },
+          child: Container(
+            width: isTablet ? 210 : 160,
+            margin: const EdgeInsets.only(right: 12),
+            child: ProductCard(
+              title: product['title']!,
+              description: product['description']!,
+              image: product['image']!,
+              price: product['price']!,
+              favorite: product['favorite']!,
+              limited: product['limited']!,
+              onAddToCart: () {
+                print("Add to cart tapped for ${product['title']}");
+              },
+              onFavoriteToggle: () {
+                print("Favorite toggled for ${product['title']}");
+              },
+            ),
+          ),
         );
       },
     ),
@@ -401,18 +437,51 @@ Widget _buildNewProducts(BuildContext context, bool isTablet) {
 }
 
 Widget _buildRecommendedProducts(BuildContext context, bool isTablet) {
+  final List<Map<String, dynamic>> mockProducts = [
+    {
+      "title": "Fragrance Rose",
+      "description": "Essential body mist",
+      "image": "assets/images/product_image.png",
+      "price": 14.50,
+      "favorite": false,
+      "limited": true,
+    },
+    {
+      "title": "Skincare Cream",
+      "description": "Hydrating night face lotion",
+      "image": "assets/images/product_image.png",
+      "price": 22.00,
+      "favorite": true,
+      "limited": false,
+    },
+  ];
+
   return AspectRatio(
     aspectRatio: isTablet ? 16 / 5 : 16 / 10,
     child: ListView.builder(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      itemCount: 5,
+      itemCount: mockProducts.length,
       physics: const BouncingScrollPhysics(),
       itemBuilder: (context, index) {
+        final product = mockProducts[index];
         return Container(
           width: isTablet ? 210 : 160,
           margin: const EdgeInsets.only(right: 12),
-          child: ProductCard(),
+          child: ProductCard(
+            title: product['title']!,
+            description: product['description']!,
+            image: product['image']!,
+            price: product['price']!,
+            favorite: product['favorite']!,
+            limited: product['limited']!,
+            onAddToCart: () {
+              print("Add to cart tapped for ${product['title']}");
+            },
+            onFavoriteToggle: () {
+              product['favorite'] = !product['favorite']!;
+            },
+          ),
         );
       },
     ),
